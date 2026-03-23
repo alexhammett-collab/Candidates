@@ -1,5 +1,3 @@
-import { COGNITION_LOGO } from "./logoData";
-
 export default function CognitionLogo({
   height = 24,
   className = "",
@@ -10,11 +8,11 @@ export default function CognitionLogo({
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`data:image/png;base64,${COGNITION_LOGO}`}
+      src="/cognition-logo-black.png"
       alt="Cognition"
       height={height}
       className={className}
-      style={{ height, width: "auto" }}
+      style={{ height, width: "auto", imageRendering: "auto" }}
     />
   );
 }

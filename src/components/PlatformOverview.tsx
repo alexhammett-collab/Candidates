@@ -237,36 +237,36 @@ function OrbitalDiagram({
 
       {/* Devin master node on outer ring */}
       <motion.div
-        className="absolute z-10"
+        className="absolute z-20"
         style={{
-          left: `calc(50% + ${devinX}px - 44px)`,
-          top: `calc(50% + ${devinY}px - 44px)`,
+          left: `calc(50% + ${devinX}px - 52px)`,
+          top: `calc(50% + ${devinY}px - 52px)`,
         }}
         initial={{ opacity: 0, scale: 0 }}
-        animate={inView ? { opacity: 1, scale: isDevinActive ? 1.12 : 1 } : {}}
+        animate={inView ? { opacity: 1, scale: isDevinActive ? 1.1 : 1 } : {}}
         transition={{ delay: 0.9, duration: 0.6 }}
         onMouseEnter={() => setActiveNode("devin-master")}
         onMouseLeave={() => setActiveNode(null)}
       >
         <div
-          className="w-[88px] h-[88px] rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+          className="w-[104px] h-[104px] rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
           style={{
-            background: isDevinActive
-              ? "radial-gradient(circle, rgba(99,102,241,0.25) 0%, rgba(99,102,241,0.08) 70%, transparent 100%)"
-              : "radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.04) 70%, transparent 100%)",
-            border: `1.5px solid ${isDevinActive ? "rgba(99,102,241,0.5)" : "rgba(99,102,241,0.2)"}`,
-            boxShadow: isDevinActive ? "0 0 40px rgba(99,102,241,0.15)" : "none",
+            background: "linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #a5b4fc 100%)",
+            boxShadow: isDevinActive
+              ? "0 0 50px rgba(99,102,241,0.4), 0 0 100px rgba(99,102,241,0.15)"
+              : "0 0 30px rgba(99,102,241,0.2), 0 0 60px rgba(99,102,241,0.08)",
+            border: "2px solid rgba(255,255,255,0.3)",
           }}
         >
-          <span className="text-sm font-bold text-[#6366f1]">Devin</span>
-          <span className="text-[9px] text-[#6366f1]/60 mt-0.5">Master Agent</span>
+          <span className="text-base font-bold text-white">Devin</span>
+          <span className="text-[10px] text-white/70 mt-0.5 font-medium">Lead Agent</span>
         </div>
 
         {isDevinActive && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-56 glass-panel p-3 text-center z-20"
+            className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-56 glass-panel p-3 text-center z-30"
           >
             <p className="text-xs text-[#666] leading-relaxed">
               A lead Devin orchestrates a fleet of autonomous Devin instances, coordinating parallel workstreams at scale.
@@ -286,22 +286,22 @@ function OrbitalDiagram({
             key={mini.label}
             className="absolute z-10"
             style={{
-              left: `calc(50% + ${mx}px - 16px)`,
-              top: `calc(50% + ${my}px - 16px)`,
+              left: `calc(50% + ${mx}px - 18px)`,
+              top: `calc(50% + ${my}px - 18px)`,
             }}
             initial={{ opacity: 0, scale: 0 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ delay: 1.1 + i * 0.08, duration: 0.4, type: "spring", stiffness: 250 }}
           >
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center cursor-default transition-all duration-300"
+              className="w-9 h-9 rounded-full flex items-center justify-center cursor-default transition-all duration-300"
               style={{
-                background:
-                  "radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(99,102,241,0.03) 100%)",
-                border: "1px solid rgba(99,102,241,0.15)",
+                background: "linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(129,140,248,0.15) 100%)",
+                border: "1.5px solid rgba(99,102,241,0.3)",
+                boxShadow: "0 0 12px rgba(99,102,241,0.1)",
               }}
             >
-              <span className="text-[8px] font-semibold text-[#6366f1]/70">
+              <span className="text-[9px] font-bold text-[#6366f1]">
                 {mini.label}
               </span>
             </div>
@@ -355,6 +355,45 @@ function MobileGrid({ inView }: { inView: boolean }) {
           </motion.div>
         ))}
       </div>
+
+      {/* Devin master agent + fleet on mobile */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.7, duration: 0.5 }}
+        className="mt-6 p-5 rounded-2xl text-center"
+        style={{
+          background: "linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #a5b4fc 100%)",
+          boxShadow: "0 0 30px rgba(99,102,241,0.2)",
+        }}
+      >
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="text-base font-bold text-white">Devin</span>
+          <span className="text-[10px] text-white/70 font-medium bg-white/15 px-2 py-0.5 rounded-full">
+            Lead Agent
+          </span>
+        </div>
+        <p className="text-xs text-white/80 leading-relaxed mb-4">
+          A lead Devin orchestrates a fleet of autonomous Devin instances, coordinating parallel workstreams at scale.
+        </p>
+        <div className="flex items-center justify-center gap-2">
+          {miniDevins.map((mini, i) => (
+            <motion.div
+              key={mini.label}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.9 + i * 0.06, type: "spring", stiffness: 300 }}
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                border: "1px solid rgba(255,255,255,0.3)",
+              }}
+            >
+              <span className="text-[9px] font-bold text-white">{mini.label}</span>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
     </div>
   );
 }
