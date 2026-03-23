@@ -3,12 +3,14 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import dynamic from "next/dynamic";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const NodeNetwork = dynamic(() => import("./NodeNetwork"), { ssr: false });
 
 export default function CTA() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -24,7 +26,7 @@ export default function CTA() {
 
       <div className="relative z-10 text-center max-w-2xl">
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight">
-          {"Join the Frontier.".split(" ").map((word, i) => (
+          {t.cta.heading.split(" ").map((word, i) => (
             <motion.span
               key={i}
               className="inline-block mr-[0.28em]"
@@ -43,8 +45,7 @@ export default function CTA() {
           transition={{ delay: 0.4, duration: 0.7, ease }}
           className="mt-6 text-lg text-[#666] leading-relaxed"
         >
-          We&apos;re building the most ambitious AI engineering team in the world.
-          If you want to work on problems that matter, we want to talk to you.
+          {t.cta.description}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -61,7 +62,7 @@ export default function CTA() {
             whileTap={{ scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            View Roles
+            {t.cta.viewRoles}
             <svg
               className="w-4 h-4"
               fill="none"
@@ -85,7 +86,7 @@ export default function CTA() {
             whileTap={{ scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            Learn More
+            {t.cta.learnMore}
           </motion.a>
         </motion.div>
       </div>

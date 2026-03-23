@@ -2,41 +2,18 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
-const founders = [
-  {
-    name: "Scott Wu",
-    role: "CEO & Co-Founder",
-    descriptor: "3x IOI Gold Medalist (1st place 2014). Previously Lunchclub, Nuro.",
-    image: "https://github.com/ScottSWu.png",
-  },
-  {
-    name: "Steven Hao",
-    role: "CTO & Co-Founder",
-    descriptor: "IOI Gold Medalist. Previously Scale AI, Citadel, MIT.",
-    image: "https://github.com/stevenhao.png",
-  },
-  {
-    name: "Walden Yan",
-    role: "CPO & Co-Founder",
-    descriptor: "IOI Gold Medalist. Previously Scale AI, Harvard.",
-    image: "https://github.com/walnutwaldo.png",
-  },
-  {
-    name: "Russell Kaplan",
-    role: "President",
-    descriptor: "Previously Head of ML at Scale AI. Co-founded Helia. Stanford, Tesla.",
-    image: "https://github.com/rkaplan.png",
-  },
-  {
-    name: "Neal Wu",
-    role: "Chief Scientist",
-    descriptor: "IOI Gold Medalist. 2x ICPC World Finalist. Google, competitive programming legend.",
-    image: "https://github.com/nealwu.png",
-  },
+const founderData = [
+  { name: "Scott Wu", image: "https://github.com/ScottSWu.png" },
+  { name: "Steven Hao", image: "https://github.com/stevenhao.png" },
+  { name: "Walden Yan", image: "https://github.com/walnutwaldo.png" },
+  { name: "Russell Kaplan", image: "https://github.com/rkaplan.png" },
+  { name: "Neal Wu", image: "https://github.com/nealwu.png" },
 ];
 
 export default function Founders() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -50,10 +27,10 @@ export default function Founders() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="inline-block text-xs font-medium tracking-[0.2em] uppercase text-[#6366f1]"
           >
-            Team
+            {t.founders.label}
           </motion.span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight">
-            {"Built by world-class engineers.".split(" ").map((word, i) => (
+            {t.founders.heading.split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 className="inline-block mr-[0.28em]"
@@ -68,7 +45,7 @@ export default function Founders() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
-          {founders.map((founder, i) => (
+          {founderData.map((founder, i) => (
             <motion.div
               key={founder.name}
               initial={{ opacity: 0, y: 40, scale: 0.9, filter: "blur(4px)" }}
@@ -91,10 +68,10 @@ export default function Founders() {
               </motion.div>
               <h3 className="text-base font-semibold">{founder.name}</h3>
               <p className="text-sm text-[#6366f1] font-medium mt-0.5">
-                {founder.role}
+                {t.founders.roles[i]}
               </p>
               <p className="text-xs text-[#555] mt-2 leading-relaxed max-w-[200px] mx-auto">
-                {founder.descriptor}
+                {t.founders.descriptors[i]}
               </p>
             </motion.div>
           ))}

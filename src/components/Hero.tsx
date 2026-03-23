@@ -4,14 +4,14 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import CognitionLogo from "./CognitionLogo";
 import dynamic from "next/dynamic";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const NodeNetwork = dynamic(() => import("./NodeNetwork"), { ssr: false });
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const heroTitle = "The team redefining how software is built.";
-
 export default function Hero() {
+  const { t } = useLanguage();
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -22,7 +22,7 @@ export default function Hero() {
   const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const networkScale = useTransform(scrollYProgress, [0, 0.6], [1, 1.15]);
 
-  const words = heroTitle.split(" ");
+  const words = t.hero.title.split(" ");
 
   return (
     <section
@@ -79,8 +79,7 @@ export default function Hero() {
           transition={{ delay: 1.1, duration: 0.8, ease }}
           className="mt-8 text-lg sm:text-xl text-[#666] max-w-2xl mx-auto leading-relaxed"
         >
-          We build autonomous AI software engineers. Systems that reason,
-          plan, and execute across entire codebases. Not copilots. Engineers.
+          {t.hero.subtitle}
         </motion.p>
 
         {/* CTA buttons */}
@@ -97,7 +96,7 @@ export default function Hero() {
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            Explore Platform
+            {t.hero.explorePlatform}
           </motion.a>
           <motion.a
             href="#cta"
@@ -110,7 +109,7 @@ export default function Hero() {
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            Join the Team
+            {t.hero.joinTeam}
           </motion.a>
         </motion.div>
       </motion.div>

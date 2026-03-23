@@ -2,6 +2,8 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { Translations } from "@/i18n";
 
 interface PlatformNode {
   id: string;
@@ -11,43 +13,19 @@ interface PlatformNode {
   color: string;
 }
 
-const nodes: PlatformNode[] = [
-  {
-    id: "windsurf",
-    label: "Windsurf",
-    description: "AI-native IDE with deep codebase understanding and multi-file editing.",
-    angle: 100,
-    color: "#38bdf8",
-  },
-  {
-    id: "cli",
-    label: "Devin CLI",
-    description: "Terminal-native interface for dispatching and managing autonomous tasks.",
-    angle: 155,
-    color: "#a78bfa",
-  },
-  {
-    id: "pr-review",
-    label: "PR Review",
-    description: "Automated code review with deep contextual understanding of your codebase.",
-    angle: 210,
-    color: "#34d399",
-  },
-  {
-    id: "dana",
-    label: "Dana",
-    description: "AI data analyst that transforms questions into insights and visualizations.",
-    angle: 265,
-    color: "#fb923c",
-  },
-  {
-    id: "deepwiki",
-    label: "DeepWiki",
-    description: "AI-generated documentation and knowledge base for any codebase.",
-    angle: 320,
-    color: "#f472b6",
-  },
-];
+const nodeKeys = ["windsurf", "cli", "prReview", "dana", "deepwiki"] as const;
+const nodeAngles = [100, 155, 210, 265, 320];
+const nodeColors = ["#38bdf8", "#a78bfa", "#34d399", "#fb923c", "#f472b6"];
+
+function buildNodes(tp: Translations["platform"]): PlatformNode[] {
+  return nodeKeys.map((key, i) => ({
+    id: key,
+    label: tp.nodes[key],
+    description: tp.nodeDescs[key],
+    angle: nodeAngles[i],
+    color: nodeColors[i],
+  }));
+}
 
 const devinAngle = 30;
 const miniDevins = [
@@ -61,10 +39,14 @@ function OrbitalDiagram({
   inView,
   activeNode,
   setActiveNode,
+  nodes,
+  tp,
 }: {
   inView: boolean;
   activeNode: string | null;
   setActiveNode: (id: string | null) => void;
+  nodes: PlatformNode[];
+  tp: Translations["platform"];
 }) {
   const radius = 200;
   const miniRadius = 85;
@@ -198,8 +180,8 @@ function OrbitalDiagram({
             border: "2px solid rgba(255,255,255,0.3)",
           }}
         >
-          <span className="text-sm font-bold text-white">Devin</span>
-          <span className="text-[9px] text-white/60 mt-0.5 font-medium">Lead</span>
+          <span className="text-sm font-bold text-white">{tp.devinLead}</span>
+          <span className="text-[9px] text-white/60 mt-0.5 font-medium">{tp.devinLeadSub}</span>
         </div>
         {isDevinActive && (
           <motion.div
@@ -208,7 +190,7 @@ function OrbitalDiagram({
             className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-52 glass-panel p-3 text-center z-30"
           >
             <p className="text-[10px] text-[#666] leading-relaxed">
-              A lead Devin orchestrates a fleet of autonomous agents, coordinating parallel workstreams like a virtual engineering pod.
+              {tp.devinLeadTooltip}
             </p>
           </motion.div>
         )}
@@ -259,14 +241,14 @@ function OrbitalDiagram({
         }}
       >
         <span className="text-[9px] font-semibold tracking-[0.15em] uppercase text-[#6366f1]/50 whitespace-nowrap">
-          Engineering Pod
+          {tp.engineeringPod}
         </span>
       </motion.div>
     </motion.div>
   );
 }
 
-function MobileGrid({ inView }: { inView: boolean }) {
+function MobileGrid({ inView, nodes, tp }: { inView: boolean; nodes: PlatformNode[]; tp: Translations["platform"] }) {
   return (
     <div className="md:hidden">
       <motion.div
@@ -322,13 +304,13 @@ function MobileGrid({ inView }: { inView: boolean }) {
         }}
       >
         <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="text-base font-bold text-white">Devin</span>
+          <span className="text-base font-bold text-white">{tp.devinLead}</span>
           <span className="text-[10px] text-white/70 font-medium bg-white/15 px-2 py-0.5 rounded-full">
-            Lead Agent
+            {tp.mobileDevinLeadAgent}
           </span>
         </div>
         <p className="text-xs text-white/80 leading-relaxed mb-4">
-          A lead Devin orchestrates a fleet of autonomous Devin instances, coordinating parallel workstreams at scale.
+          {tp.mobileDevinDescription}
         </p>
         <div className="flex items-center justify-center gap-2">
           {miniDevins.map((mini, i) => (
@@ -353,9 +335,11 @@ function MobileGrid({ inView }: { inView: boolean }) {
 }
 
 export default function PlatformOverview() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const [activeNode, setActiveNode] = useState<string | null>(null);
+  const nodes = buildNodes(t.platform);
 
   return (
     <section id="platform" className="relative py-32 px-6" ref={ref}>
@@ -367,10 +351,10 @@ export default function PlatformOverview() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="inline-block text-xs font-medium tracking-[0.2em] uppercase text-[#6366f1]"
           >
-            Platform
+            {t.platform.label}
           </motion.span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight">
-            {"One intelligence. Many surfaces.".split(" ").map((word, i) => (
+            {t.platform.heading.split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 className="inline-block mr-[0.28em]"
@@ -388,7 +372,7 @@ export default function PlatformOverview() {
             transition={{ delay: 0.5, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="mt-4 text-[#666] text-lg max-w-xl mx-auto"
           >
-            Devin&apos;s reasoning engine powers every product in the Cognition ecosystem.
+            {t.platform.description}
           </motion.p>
         </div>
 
@@ -396,8 +380,10 @@ export default function PlatformOverview() {
           inView={inView}
           activeNode={activeNode}
           setActiveNode={setActiveNode}
+          nodes={nodes}
+          tp={t.platform}
         />
-        <MobileGrid inView={inView} />
+        <MobileGrid inView={inView} nodes={nodes} tp={t.platform} />
       </div>
     </section>
   );

@@ -7,33 +7,12 @@ import {
   useTransform,
 } from "framer-motion";
 import { useRef } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const pillars = [
-  {
-    label: "Skills & Expertise",
-    description:
-      "Full-stack engineering capability across languages, frameworks, and infrastructure, deployed on demand.",
-  },
-  {
-    label: "Organisational Context",
-    description:
-      "Persistent understanding of your architecture, conventions, dependencies, and decision history.",
-  },
-  {
-    label: "Governance & Controls",
-    description:
-      "Operates within your permission model, audit trail, approval gates, and compliance requirements.",
-  },
-  {
-    label: "Fleet Orchestration",
-    description:
-      "A single Devin can coordinate and direct other Devins, scaling capacity across workstreams in parallel.",
-  },
-];
-
 export default function ParadigmShift() {
+  const { t } = useLanguage();
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-10%" });
@@ -47,10 +26,8 @@ export default function ParadigmShift() {
 
   const bgY = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
-  const bigStatement =
-    "Devin is not a tool for developers.";
-  const subStatement =
-    "It's an institutionalised engineering capacity.";
+  const bigStatement = t.paradigm.bigStatement;
+  const subStatement = t.paradigm.subStatement;
 
   return (
     <section
@@ -74,7 +51,7 @@ export default function ParadigmShift() {
             transition={{ duration: 0.5, ease }}
             className="inline-block text-xs font-medium tracking-[0.25em] uppercase text-[#6366f1] mb-8"
           >
-            The Paradigm Shift
+            {t.paradigm.label}
           </motion.span>
 
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.08]">
@@ -127,15 +104,11 @@ export default function ParadigmShift() {
             transition={{ delay: 1.2, duration: 0.8, ease }}
             className="mt-10 text-lg sm:text-xl text-[#555] max-w-3xl mx-auto leading-relaxed"
           >
-            Imagine a strategic engineering resource: PMO-aligned, programme-aware,
-            with skills, organisational understanding, permissions, and governance controls,
-            brought to bear as a lever for{" "}
-            <span className="font-semibold text-[#333]">cost</span>,{" "}
-            <span className="font-semibold text-[#333]">speed</span>, and{" "}
-            <span className="font-semibold text-[#333]">risk of delivery</span>.
-            Not a copilot. Not an assistant. A virtual engineering resource that
-            can be considered for the same strategic programmes traditionally
-            reserved for human teams and technology budgets.
+            {t.paradigm.bodyStart}{" "}
+            <span className="font-semibold text-[#333]">{t.paradigm.cost}</span>,{" "}
+            <span className="font-semibold text-[#333]">{t.paradigm.speed}</span>, and{" "}
+            <span className="font-semibold text-[#333]">{t.paradigm.risk}</span>.
+            {" "}{t.paradigm.bodyEnd}
           </motion.p>
         </div>
 
@@ -167,20 +140,17 @@ export default function ParadigmShift() {
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-[#333]">
-              Devin Orchestrating Devins
+              {t.paradigm.fleetTitle}
             </h3>
           </div>
           <p className="text-[#555] leading-relaxed">
-            A single Devin can decompose large initiatives, spin up parallel Devin
-            instances, allocate work across them, review their output, and integrate
-            the results, operating as a lead engineer directing a fleet of autonomous
-            teammates. This is how engineering capacity scales without coordination overhead.
+            {t.paradigm.fleetBody}
           </p>
         </motion.div>
 
         {/* Four pillars */}
         <div ref={pillarsRef} className="grid sm:grid-cols-2 gap-5 sm:gap-6">
-          {pillars.map((pillar, i) => (
+          {t.paradigm.pillars.map((pillar, i) => (
             <motion.div
               key={pillar.label}
               initial={{ opacity: 0, y: 30, scale: 0.95, filter: "blur(4px)" }}

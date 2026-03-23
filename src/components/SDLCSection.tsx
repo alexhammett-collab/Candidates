@@ -2,70 +2,20 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const dimensions = [
-  {
-    id: "cost",
-    lever: "Cost",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-      </svg>
-    ),
-    color: "#10b981",
-    headline: "Engineering capacity without linear cost scaling.",
-    points: [
-      "Deploy Devin instances across programmes at a fraction of the cost of equivalent human resourcing",
-      "Scale up for delivery peaks, scale down after. No recruitment cycles, no ramp-up time",
-      "Shift budget from headcount to outcome. Pay for engineering capacity, not engineering seats",
-    ],
-  },
-  {
-    id: "speed",
-    lever: "Speed",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-      </svg>
-    ),
-    color: "#6366f1",
-    headline: "Compress delivery timelines without compressing quality.",
-    points: [
-      "Parallelise workstreams across a fleet of Devins, one lead Devin orchestrating many",
-      "Eliminate the onboarding curve. Devin has full codebase understanding from day one",
-      "Continuous execution across time zones with no handoff loss or context switching",
-    ],
-  },
-  {
-    id: "risk",
-    lever: "Risk",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
-    ),
-    color: "#f59e0b",
-    headline: "De-risk delivery through governance-aware autonomous execution.",
-    points: [
-      "Operates within your permission model, approval gates, and compliance controls",
-      "Every action is auditable, with full trace of reasoning, decisions, and code changes",
-      "Consistent application of coding standards, security practices, and architectural patterns at scale",
-    ],
-  },
-];
-
-const lifecycleStages = [
-  { phase: "Discover", description: "Codebase analysis, impact assessment, dependency mapping" },
-  { phase: "Plan", description: "Work decomposition, sequencing, resource allocation across Devins" },
-  { phase: "Build", description: "Autonomous implementation across parallel workstreams" },
-  { phase: "Review", description: "Contextual code review with full architectural understanding" },
-  { phase: "Test", description: "Automated test creation, execution, and failure iteration" },
-  { phase: "Ship", description: "CI/CD integration, deployment, and production monitoring" },
+const dimIds = ["cost", "speed", "risk"];
+const dimColors = ["#10b981", "#6366f1", "#f59e0b"];
+const dimIcons = [
+  <svg key="cost" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>,
+  <svg key="speed" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>,
+  <svg key="risk" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>,
 ];
 
 export default function SDLCSection() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-8%" });
   const [activeLever, setActiveLever] = useState<string | null>(null);
@@ -84,10 +34,10 @@ export default function SDLCSection() {
             transition={{ duration: 0.5, ease }}
             className="inline-block text-xs font-medium tracking-[0.25em] uppercase text-[#6366f1] mb-4"
           >
-            Strategic Delivery
+            {t.sdlc.label}
           </motion.span>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight max-w-4xl mx-auto leading-[1.1]">
-            {"Three levers. One platform.".split(" ").map((word, i) => (
+            {t.sdlc.heading.split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 className="inline-block mr-[0.28em]"
@@ -105,42 +55,44 @@ export default function SDLCSection() {
             transition={{ delay: 0.5, duration: 0.6, ease }}
             className="mt-5 text-lg text-[#555] max-w-2xl mx-auto leading-relaxed"
           >
-            When engineering capacity is a deployable resource, not just a headcount line,
-            programme leaders gain strategic control over how work gets delivered.
+            {t.sdlc.description}
           </motion.p>
         </div>
 
         {/* Three levers */}
         <div className="mt-16 sm:mt-20 grid md:grid-cols-3 gap-5 sm:gap-6">
-          {dimensions.map((dim, i) => {
-            const isActive = activeLever === dim.id;
+          {t.sdlc.dims.map((dim, i) => {
+            const id = dimIds[i];
+            const color = dimColors[i];
+            const icon = dimIcons[i];
+            const isActive = activeLever === id;
             return (
               <motion.div
-                key={dim.id}
+                key={id}
                 initial={{ opacity: 0, y: 30, scale: 0.95, filter: "blur(4px)" }}
                 animate={inView ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : {}}
                 transition={{ delay: 0.6 + i * 0.15, duration: 0.7, ease }}
-                onMouseEnter={() => setActiveLever(dim.id)}
+                onMouseEnter={() => setActiveLever(id)}
                 onMouseLeave={() => setActiveLever(null)}
                 whileHover={{ y: -6 }}
                 className="glass-panel p-6 sm:p-7 cursor-pointer transition-colors duration-300"
                 style={{
-                  borderColor: isActive ? `${dim.color}40` : undefined,
+                  borderColor: isActive ? `${color}40` : undefined,
                 }}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center"
                     style={{
-                      backgroundColor: `${dim.color}10`,
-                      color: dim.color,
+                      backgroundColor: `${color}10`,
+                      color: color,
                     }}
                   >
-                    {dim.icon}
+                    {icon}
                   </div>
                   <span
                     className="text-sm font-bold uppercase tracking-wider"
-                    style={{ color: dim.color }}
+                    style={{ color: color }}
                   >
                     {dim.lever}
                   </span>
@@ -161,7 +113,7 @@ export default function SDLCSection() {
                     >
                       <span
                         className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0"
-                        style={{ backgroundColor: dim.color }}
+                        style={{ backgroundColor: color }}
                       />
                       {point}
                     </motion.li>
@@ -180,11 +132,11 @@ export default function SDLCSection() {
             transition={{ duration: 0.5, ease }}
             className="text-center text-sm font-medium tracking-[0.2em] uppercase text-[#999] mb-10"
           >
-            Across the Full Lifecycle
+            {t.sdlc.pipelineLabel}
           </motion.h3>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4">
-            {lifecycleStages.map((stage, i) => (
+            {t.sdlc.stages.map((stage, i) => (
               <motion.div
                 key={stage.phase}
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}

@@ -7,43 +7,16 @@ import {
   useTransform,
 } from "framer-motion";
 import { useRef } from "react";
-
-const steps = [
-  {
-    num: "01",
-    title: "Software teams don't scale linearly.",
-    highlight: "10× engineers cost 10×. Output rarely follows.",
-    description:
-      "Every additional engineer adds communication overhead, onboarding cost, and coordination debt. The industry has optimized the wrong variable for decades.",
-    stat: "70%",
-    statLabel: "of engineering time spent on maintenance, not creation",
-  },
-  {
-    num: "02",
-    title: "AI changes the unit of work.",
-    highlight: "From headcount to intelligence.",
-    description:
-      "When an AI system can reason across an entire codebase, plan multi-step implementations, and execute autonomously, the bottleneck moves from people to capability.",
-    stat: "1",
-    statLabel: "Devin session replaces hours of repetitive engineering",
-  },
-  {
-    num: "03",
-    title: "Foundation models crossed the threshold.",
-    highlight: "Not copilots. Engineers.",
-    description:
-      "Reasoning capability, long-context understanding, and tool use have converged. For the first time, it's possible to build AI that doesn't just suggest code. It engineers solutions.",
-    stat: "∞",
-    statLabel: "parallel workstreams, zero coordination overhead",
-  },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 function StepCard({
   step,
   index,
+  stepsLength,
 }: {
-  step: (typeof steps)[number];
+  step: { num: string; title: string; highlight: string; description: string; stat: string; statLabel: string };
   index: number;
+  stepsLength: number;
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-15%" });
@@ -51,7 +24,7 @@ function StepCard({
   return (
     <div ref={ref} className="relative">
       {/* Connecting line between steps */}
-      {index < steps.length - 1 && (
+      {index < stepsLength - 1 && (
         <motion.div
           className="absolute left-8 top-full w-px h-16 md:h-20 origin-top"
           style={{ background: "linear-gradient(to bottom, #6366f1, transparent)" }}
@@ -174,6 +147,7 @@ function StepCard({
 }
 
 export default function WhyCognition() {
+  const { t } = useLanguage();
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-10%" });
@@ -185,7 +159,7 @@ export default function WhyCognition() {
 
   const bgY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
-  const headerWords = "The way software gets built is about to change.".split(" ");
+  const headerWords = t.whyCognition.heading.split(" ");
 
   return (
     <section ref={sectionRef} className="relative py-32 sm:py-40 px-6 overflow-hidden">
@@ -206,7 +180,7 @@ export default function WhyCognition() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="inline-block text-xs font-medium tracking-[0.25em] uppercase text-[#6366f1] mb-6"
           >
-            Why Cognition
+            {t.whyCognition.label}
           </motion.span>
 
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.1]">
@@ -235,8 +209,8 @@ export default function WhyCognition() {
 
         {/* Steps */}
         <div className="space-y-20 md:space-y-28">
-          {steps.map((step, i) => (
-            <StepCard key={step.num} step={step} index={i} />
+          {t.whyCognition.steps.map((step, i) => (
+            <StepCard key={step.num} step={step} index={i} stepsLength={t.whyCognition.steps.length} />
           ))}
         </div>
       </div>

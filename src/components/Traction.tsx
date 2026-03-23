@@ -2,6 +2,7 @@
 
 import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const logos = [
   "Goldman Sachs",
@@ -18,11 +19,11 @@ const logos = [
   "Perplexity",
 ];
 
-const stats = [
-  { label: "Valuation", value: 14, suffix: "B", prefix: "$" },
-  { label: "Enterprise Customers", value: 500, suffix: "+", prefix: "" },
-  { label: "Tasks Completed", value: 12, suffix: "M+", prefix: "" },
-  { label: "Engineers Augmented", value: 100, suffix: "K+", prefix: "" },
+const statValues = [
+  { value: 14, suffix: "B", prefix: "$" },
+  { value: 500, suffix: "+", prefix: "" },
+  { value: 12, suffix: "M+", prefix: "" },
+  { value: 100, suffix: "K+", prefix: "" },
 ];
 
 function AnimatedNumber({
@@ -58,6 +59,7 @@ function AnimatedNumber({
 }
 
 export default function Traction() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const scrollRef = useRef(null);
@@ -86,10 +88,10 @@ export default function Traction() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="inline-block text-xs font-medium tracking-[0.2em] uppercase text-[#6366f1]"
           >
-            Traction
+            {t.traction.label}
           </motion.span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight">
-            {"Trusted by the best teams.".split(" ").map((word, i) => (
+            {t.traction.heading.split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 className="inline-block mr-[0.28em]"
@@ -125,9 +127,9 @@ export default function Traction() {
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((stat, i) => (
+          {statValues.map((stat, i) => (
             <motion.div
-              key={stat.label}
+              key={i}
               initial={{ opacity: 0, y: 30, scale: 0.9, filter: "blur(4px)" }}
               animate={inView ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : {}}
               transition={{ delay: 0.5 + i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -143,7 +145,7 @@ export default function Traction() {
                 />
               </div>
               <div className="mt-2 text-xs text-[#666] uppercase tracking-wider font-medium">
-                {stat.label}
+                {t.traction.statLabels[i]}
               </div>
             </motion.div>
           ))}
