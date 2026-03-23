@@ -16,45 +16,45 @@ const nodes: PlatformNode[] = [
     id: "windsurf",
     label: "Windsurf",
     description: "AI-native IDE with deep codebase understanding and multi-file editing.",
-    angle: 0,
+    angle: 100,
     color: "#38bdf8",
   },
   {
     id: "cli",
     label: "Devin CLI",
     description: "Terminal-native interface for dispatching and managing autonomous tasks.",
-    angle: 72,
+    angle: 155,
     color: "#a78bfa",
   },
   {
     id: "pr-review",
     label: "PR Review",
     description: "Automated code review with deep contextual understanding of your codebase.",
-    angle: 144,
+    angle: 210,
     color: "#34d399",
   },
   {
     id: "dana",
     label: "Dana",
     description: "AI data analyst that transforms questions into insights and visualizations.",
-    angle: 216,
+    angle: 265,
     color: "#fb923c",
   },
   {
     id: "deepwiki",
     label: "DeepWiki",
     description: "AI-generated documentation and knowledge base for any codebase.",
-    angle: 288,
+    angle: 320,
     color: "#f472b6",
   },
 ];
 
-const devinAngle = 36;
+const devinAngle = 30;
 const miniDevins = [
-  { label: "Devin", angle: -20 },
-  { label: "Devin", angle: 16 },
-  { label: "Devin", angle: 52 },
-  { label: "Devin", angle: 88 },
+  { label: "Devin", angle: -10 },
+  { label: "Devin", angle: 18 },
+  { label: "Devin", angle: 46 },
+  { label: "Devin", angle: 74 },
 ];
 
 function OrbitalDiagram({
@@ -66,9 +66,9 @@ function OrbitalDiagram({
   activeNode: string | null;
   setActiveNode: (id: string | null) => void;
 }) {
-  const radius = 165;
-  const miniRadius = 70;
-  const size = 580;
+  const radius = 200;
+  const miniRadius = 85;
+  const size = 700;
   const cx = size / 2;
   const cy = size / 2;
 
