@@ -13,6 +13,7 @@ import SDLCSection from "@/components/SDLCSection";
 import Traction from "@/components/Traction";
 import Founders from "@/components/Founders";
 import Culture from "@/components/Culture";
+import MediaHub from "@/components/MediaHub";
 import CTA from "@/components/CTA";
 
 export default function Home() {
@@ -102,6 +103,8 @@ export default function Home() {
       <Founders />
 
       <Culture />
+
+      <MediaHub />
 
       <CTA />
 
