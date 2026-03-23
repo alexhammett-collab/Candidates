@@ -6,27 +6,33 @@ import { useRef } from "react";
 const founders = [
   {
     name: "Scott Wu",
-    role: "CEO",
-    descriptor: "IOI Gold Medalist. Previously Lunchclub, Nuro.",
-    initials: "SW",
+    role: "CEO & Co-Founder",
+    descriptor: "3x IOI Gold Medalist (1st place 2014). Previously Lunchclub, Nuro.",
+    image: "https://github.com/ScottSWu.png",
   },
   {
     name: "Steven Hao",
-    role: "CTO",
-    descriptor: "IOI Gold Medalist. Previously Lunchclub, Citadel.",
-    initials: "SH",
+    role: "CTO & Co-Founder",
+    descriptor: "IOI Gold Medalist. Previously Scale AI, Citadel, MIT.",
+    image: "https://github.com/stevenhao.png",
   },
   {
     name: "Walden Yan",
-    role: "CPO",
-    descriptor: "IOI Gold Medalist. Previously Scale AI, MIT.",
-    initials: "WY",
+    role: "CPO & Co-Founder",
+    descriptor: "IOI Gold Medalist. Previously Scale AI, Harvard.",
+    image: "https://github.com/walnutwaldo.png",
+  },
+  {
+    name: "Russell Kaplan",
+    role: "President",
+    descriptor: "Previously Head of ML at Scale AI. Co-founded Helia. Stanford, Tesla.",
+    image: "https://github.com/rkaplan.png",
   },
   {
     name: "Neal Wu",
     role: "Chief Scientist",
-    descriptor: "IOI Gold Medalist. 2x ICPC World Finalist.",
-    initials: "NW",
+    descriptor: "IOI Gold Medalist. 2x ICPC World Finalist. Google, competitive programming legend.",
+    image: "https://github.com/nealwu.png",
   },
 ];
 
@@ -61,7 +67,7 @@ export default function Founders() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
           {founders.map((founder, i) => (
             <motion.div
               key={founder.name}
@@ -72,13 +78,16 @@ export default function Founders() {
               className="text-center group"
             >
               <motion.div
-                className="relative mx-auto w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden mb-5 glass-panel flex items-center justify-center transition-all duration-500"
+                className="relative mx-auto w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden mb-5 glass-panel transition-all duration-500"
                 whileHover={{ scale: 1.08, boxShadow: "0 12px 40px rgba(99,102,241,0.1)" }}
                 transition={{ type: "spring", stiffness: 300, damping: 18 }}
               >
-                <span className="text-2xl font-semibold text-[#bbb] select-none">
-                  {founder.initials}
-                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={founder.image}
+                  alt={founder.name}
+                  className="w-full h-full object-cover"
+                />
               </motion.div>
               <h3 className="text-base font-semibold">{founder.name}</h3>
               <p className="text-sm text-[#6366f1] font-medium mt-0.5">
