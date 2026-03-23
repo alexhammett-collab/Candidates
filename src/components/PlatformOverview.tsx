@@ -49,13 +49,12 @@ const nodes: PlatformNode[] = [
   },
 ];
 
-const devinAngle = 36;
 const miniDevins = [
-  { label: "D1", offsetAngle: -55 },
-  { label: "D2", offsetAngle: -15 },
-  { label: "D3", offsetAngle: 25 },
-  { label: "D4", offsetAngle: 65 },
-  { label: "D5", offsetAngle: 105 },
+  { label: "Devin", offsetAngle: 0 },
+  { label: "Devin", offsetAngle: 72 },
+  { label: "Devin", offsetAngle: 144 },
+  { label: "Devin", offsetAngle: 216 },
+  { label: "Devin", offsetAngle: 288 },
 ];
 
 function OrbitalDiagram({
@@ -67,248 +66,223 @@ function OrbitalDiagram({
   activeNode: string | null;
   setActiveNode: (id: string | null) => void;
 }) {
-  const innerRadius = 180;
-  const outerRadius = 310;
-  const miniRadius = 65;
-  const size = outerRadius * 2 + 260;
-  const cx = size / 2;
-  const cy = size / 2;
-
-  const devinRad = (devinAngle * Math.PI) / 180;
-  const devinX = Math.cos(devinRad) * outerRadius;
-  const devinY = Math.sin(devinRad) * outerRadius;
-
-  const isDevinActive = activeNode === "devin-master";
+  const radius = 160;
+  const orbSize = radius * 2 + 180;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      className="relative mx-auto hidden md:block"
-      style={{ width: size, height: size, maxWidth: "100%" }}
-    >
-      <div className="absolute inset-0 flex items-center justify-center">
-        <svg
-          className="absolute"
-          width={size}
-          height={size}
-          viewBox={`0 0 ${size} ${size}`}
+    <div className="hidden md:flex items-start justify-center gap-0 lg:gap-8 relative">
+      {/* Platform orbital */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="relative shrink-0"
+        style={{ width: orbSize, height: orbSize }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <svg
+            className="absolute"
+            width={orbSize}
+            height={orbSize}
+            viewBox={`0 0 ${orbSize} ${orbSize}`}
+          >
+            <circle
+              cx={orbSize / 2}
+              cy={orbSize / 2}
+              r={radius}
+              fill="none"
+              stroke="rgba(99, 102, 241, 0.1)"
+              strokeWidth="1"
+              strokeDasharray="4 8"
+            />
+            {nodes.map((node) => {
+              const rad = (node.angle * Math.PI) / 180;
+              const x = orbSize / 2 + Math.cos(rad) * radius;
+              const y = orbSize / 2 + Math.sin(rad) * radius;
+              return (
+                <line
+                  key={node.id}
+                  x1={orbSize / 2}
+                  y1={orbSize / 2}
+                  x2={x}
+                  y2={y}
+                  stroke="rgba(99, 102, 241, 0.08)"
+                  strokeWidth="1"
+                />
+              );
+            })}
+          </svg>
+          <motion.div
+            className="relative z-10 w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(99,102,241,0.05) 70%, transparent 100%)",
+              border: "1px solid rgba(99,102,241,0.3)",
+            }}
+            whileHover={{ scale: 1.08 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <span className="text-sm font-semibold text-[#6366f1]">Cognition</span>
+          </motion.div>
+        </div>
+        {nodes.map((node, i) => {
+          const rad = (node.angle * Math.PI) / 180;
+          const x = Math.cos(rad) * radius;
+          const y = Math.sin(rad) * radius;
+          const isActive = activeNode === node.id;
+          return (
+            <motion.div
+              key={node.id}
+              className="absolute z-10"
+              style={{
+                left: `calc(50% + ${x}px - 48px)`,
+                top: `calc(50% + ${y}px - 48px)`,
+              }}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={inView ? { opacity: 1, scale: isActive ? 1.15 : 1 } : {}}
+              transition={{ delay: 0.4 + i * 0.1, duration: 0.5 }}
+              onMouseEnter={() => setActiveNode(node.id)}
+              onMouseLeave={() => setActiveNode(null)}
+            >
+              <div
+                className="w-24 h-24 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 glass-panel"
+                style={{
+                  boxShadow: isActive ? `0 0 30px ${node.color}30` : "none",
+                  borderColor: isActive ? `${node.color}40` : "rgba(0,0,0,0.06)",
+                }}
+              >
+                <span
+                  className="text-xs font-semibold text-center leading-tight"
+                  style={{ color: isActive ? node.color : "#444" }}
+                >
+                  {node.label}
+                </span>
+              </div>
+              {isActive && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-48 glass-panel p-3 text-center z-20"
+                >
+                  <p className="text-[10px] text-[#666] leading-relaxed">
+                    {node.description}
+                  </p>
+                </motion.div>
+              )}
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      {/* Connector line between orbital and pod */}
+      <motion.div
+        initial={{ opacity: 0, scaleX: 0 }}
+        animate={inView ? { opacity: 1, scaleX: 1 } : {}}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        className="hidden lg:flex items-center self-center"
+        style={{ originX: 0 }}
+      >
+        <div className="w-16 h-[2px] bg-gradient-to-r from-[#6366f1]/20 to-[#6366f1]/40" />
+        <div className="w-0 h-0 border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[8px] border-l-[#6366f1]/40" />
+      </motion.div>
+
+      {/* Devin Engineering Pod */}
+      <motion.div
+        initial={{ opacity: 0, x: 30 }}
+        animate={inView ? { opacity: 1, x: 0 } : {}}
+        transition={{ delay: 0.9, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="self-center relative"
+        style={{ width: 320, height: 320 }}
+      >
+        {/* Pod label */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.0, duration: 0.5 }}
+          className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap"
         >
-          {/* Inner orbit ring */}
-          <circle
-            cx={cx}
-            cy={cy}
-            r={innerRadius}
-            fill="none"
-            stroke="rgba(99, 102, 241, 0.1)"
-            strokeWidth="1"
-            strokeDasharray="4 8"
-          />
-          {/* Outer orbit ring */}
-          <circle
-            cx={cx}
-            cy={cy}
-            r={outerRadius}
-            fill="none"
-            stroke="rgba(99, 102, 241, 0.06)"
-            strokeWidth="1"
-            strokeDasharray="6 10"
-          />
-          {/* Lines from center to inner nodes */}
-          {nodes.map((node) => {
-            const rad = (node.angle * Math.PI) / 180;
-            const x = cx + Math.cos(rad) * innerRadius;
-            const y = cy + Math.sin(rad) * innerRadius;
-            return (
-              <line
-                key={node.id}
-                x1={cx}
-                y1={cy}
-                x2={x}
-                y2={y}
-                stroke="rgba(99, 102, 241, 0.08)"
-                strokeWidth="1"
-              />
-            );
-          })}
-          {/* Line from center to Devin master */}
-          <line
-            x1={cx}
-            y1={cy}
-            x2={cx + devinX}
-            y2={cy + devinY}
-            stroke="rgba(99, 102, 241, 0.12)"
-            strokeWidth="1.5"
-          />
-          {/* Mini-Devin orbit ring around Devin */}
-          <circle
-            cx={cx + devinX}
-            cy={cy + devinY}
-            r={miniRadius}
-            fill="none"
-            stroke="rgba(99, 102, 241, 0.08)"
-            strokeWidth="1"
-            strokeDasharray="3 6"
-          />
-          {/* Lines from Devin to mini-Devins */}
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#6366f1]/60">
+            Virtual Engineering Pod
+          </span>
+        </motion.div>
+
+        {/* Pod SVG */}
+        <svg className="absolute inset-0" width={320} height={320} viewBox="0 0 320 320">
+          <circle cx={160} cy={160} r={110} fill="none" stroke="rgba(99,102,241,0.1)" strokeWidth="1" strokeDasharray="4 6" />
           {miniDevins.map((mini) => {
-            const mRad = (mini.offsetAngle * Math.PI) / 180;
-            const mx = cx + devinX + Math.cos(mRad) * miniRadius;
-            const my = cy + devinY + Math.sin(mRad) * miniRadius;
+            const rad = (mini.offsetAngle * Math.PI) / 180;
+            const mx = 160 + Math.cos(rad) * 110;
+            const my = 160 + Math.sin(rad) * 110;
             return (
-              <line
-                key={mini.label}
-                x1={cx + devinX}
-                y1={cy + devinY}
-                x2={mx}
-                y2={my}
-                stroke="rgba(99, 102, 241, 0.08)"
-                strokeWidth="1"
-              />
+              <line key={mini.offsetAngle} x1={160} y1={160} x2={mx} y2={my} stroke="rgba(99,102,241,0.12)" strokeWidth="1" />
             );
           })}
         </svg>
 
-        <motion.div
-          className="relative z-10 w-28 h-28 rounded-full flex items-center justify-center cursor-pointer"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(99,102,241,0.05) 70%, transparent 100%)",
-            border: "1px solid rgba(99,102,241,0.3)",
-          }}
-          whileHover={{ scale: 1.08 }}
-          transition={{ type: "spring", stiffness: 300 }}
-        >
-          <span className="text-sm font-semibold text-[#6366f1]">Cognition</span>
-        </motion.div>
-      </div>
-
-      {/* Inner product nodes */}
-      {nodes.map((node, i) => {
-        const rad = (node.angle * Math.PI) / 180;
-        const x = Math.cos(rad) * innerRadius;
-        const y = Math.sin(rad) * innerRadius;
-        const isActive = activeNode === node.id;
-
-        return (
+        {/* Center Devin master */}
+        <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
-            key={node.id}
-            className="absolute z-10"
-            style={{
-              left: `calc(50% + ${x}px - 56px)`,
-              top: `calc(50% + ${y}px - 56px)`,
-            }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={inView ? { opacity: 1, scale: isActive ? 1.15 : 1 } : {}}
-            transition={{ delay: 0.4 + i * 0.1, duration: 0.5 }}
-            onMouseEnter={() => setActiveNode(node.id)}
-            onMouseLeave={() => setActiveNode(null)}
-          >
-            <div
-              className="w-28 h-28 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 glass-panel"
-              style={{
-                boxShadow: isActive ? `0 0 30px ${node.color}30` : "none",
-                borderColor: isActive ? `${node.color}40` : "rgba(0,0,0,0.06)",
-              }}
-            >
-              <span
-                className="text-sm font-semibold text-center leading-tight"
-                style={{ color: isActive ? node.color : "#444" }}
-              >
-                {node.label}
-              </span>
-            </div>
-
-            {isActive && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-52 glass-panel p-3 text-center z-20"
-              >
-                <p className="text-xs text-[#666] leading-relaxed">
-                  {node.description}
-                </p>
-              </motion.div>
-            )}
-          </motion.div>
-        );
-      })}
-
-      {/* Devin master node on outer ring */}
-      <motion.div
-        className="absolute z-20"
-        style={{
-          left: `calc(50% + ${devinX}px - 52px)`,
-          top: `calc(50% + ${devinY}px - 52px)`,
-        }}
-        initial={{ opacity: 0, scale: 0 }}
-        animate={inView ? { opacity: 1, scale: isDevinActive ? 1.1 : 1 } : {}}
-        transition={{ delay: 0.9, duration: 0.6 }}
-        onMouseEnter={() => setActiveNode("devin-master")}
-        onMouseLeave={() => setActiveNode(null)}
-      >
-        <div
-          className="w-[104px] h-[104px] rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
-          style={{
-            background: "linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #a5b4fc 100%)",
-            boxShadow: isDevinActive
-              ? "0 0 50px rgba(99,102,241,0.4), 0 0 100px rgba(99,102,241,0.15)"
-              : "0 0 30px rgba(99,102,241,0.2), 0 0 60px rgba(99,102,241,0.08)",
-            border: "2px solid rgba(255,255,255,0.3)",
-          }}
-        >
-          <span className="text-base font-bold text-white">Devin</span>
-          <span className="text-[10px] text-white/70 mt-0.5 font-medium">Lead Agent</span>
-        </div>
-
-        {isDevinActive && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-56 glass-panel p-3 text-center z-30"
-          >
-            <p className="text-xs text-[#666] leading-relaxed">
-              A lead Devin orchestrates a fleet of autonomous Devin instances, coordinating parallel workstreams at scale.
-            </p>
-          </motion.div>
-        )}
-      </motion.div>
-
-      {/* Mini-Devin satellite nodes */}
-      {miniDevins.map((mini, i) => {
-        const mRad = (mini.offsetAngle * Math.PI) / 180;
-        const mx = devinX + Math.cos(mRad) * miniRadius;
-        const my = devinY + Math.sin(mRad) * miniRadius;
-
-        return (
-          <motion.div
-            key={mini.label}
-            className="absolute z-10"
-            style={{
-              left: `calc(50% + ${mx}px - 18px)`,
-              top: `calc(50% + ${my}px - 18px)`,
-            }}
             initial={{ opacity: 0, scale: 0 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 1.1 + i * 0.08, duration: 0.4, type: "spring", stiffness: 250 }}
+            transition={{ delay: 1.0, duration: 0.5 }}
+            className="w-[100px] h-[100px] rounded-full flex flex-col items-center justify-center z-10"
+            style={{
+              background: "linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #a5b4fc 100%)",
+              boxShadow: "0 0 40px rgba(99,102,241,0.25), 0 0 80px rgba(99,102,241,0.1)",
+              border: "2px solid rgba(255,255,255,0.3)",
+            }}
           >
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center cursor-default transition-all duration-300"
-              style={{
-                background: "linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(129,140,248,0.15) 100%)",
-                border: "1.5px solid rgba(99,102,241,0.3)",
-                boxShadow: "0 0 12px rgba(99,102,241,0.1)",
-              }}
-            >
-              <span className="text-[9px] font-bold text-[#6366f1]">
-                {mini.label}
-              </span>
-            </div>
+            <span className="text-sm font-bold text-white">Devin</span>
+            <span className="text-[9px] text-white/70 mt-0.5 font-medium">Lead</span>
           </motion.div>
-        );
-      })}
-    </motion.div>
+        </div>
+
+        {/* Mini-Devin agents */}
+        {miniDevins.map((mini, i) => {
+          const rad = (mini.offsetAngle * Math.PI) / 180;
+          const mx = Math.cos(rad) * 110;
+          const my = Math.sin(rad) * 110;
+          return (
+            <motion.div
+              key={i}
+              className="absolute z-10"
+              style={{
+                left: `calc(50% + ${mx}px - 24px)`,
+                top: `calc(50% + ${my}px - 24px)`,
+              }}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 1.2 + i * 0.1, duration: 0.4, type: "spring", stiffness: 250 }}
+            >
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(129,140,248,0.12) 100%)",
+                  border: "1.5px solid rgba(99,102,241,0.3)",
+                  boxShadow: "0 0 16px rgba(99,102,241,0.1)",
+                }}
+              >
+                <span className="text-[8px] font-bold text-[#6366f1]">
+                  {mini.label}
+                </span>
+              </div>
+            </motion.div>
+          );
+        })}
+
+        {/* Pod description */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.5, duration: 0.5 }}
+          className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-64 text-center"
+        >
+          <p className="text-[11px] text-[#888] leading-relaxed">
+            A lead Devin orchestrates a fleet of agents, coordinating parallel workstreams like a virtual engineering team.
+          </p>
+        </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
