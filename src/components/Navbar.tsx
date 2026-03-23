@@ -37,7 +37,7 @@ export default function Navbar() {
     >
       <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#" className="shrink-0">
-          <CognitionLogo height={22} />
+          <CognitionLogo height={36} />
         </a>
         <div className="flex items-center gap-4 sm:gap-8">
           <div className="hidden sm:flex items-center gap-8">

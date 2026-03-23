@@ -162,7 +162,7 @@ export default function WhyCognition() {
   const headerWords = t.whyCognition.heading.split(" ");
 
   return (
-    <section ref={sectionRef} className="relative py-32 sm:py-40 px-6 overflow-hidden">
+    <section ref={sectionRef} className="relative py-20 sm:py-24 px-6 overflow-hidden">
       {/* Subtle animated background gradient */}
       <motion.div
         className="absolute inset-0 pointer-events-none"

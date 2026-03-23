@@ -32,7 +32,7 @@ export default function ParadigmShift() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-40 sm:py-52 px-6 overflow-hidden"
+      className="relative py-20 sm:py-28 px-6 overflow-hidden"
     >
       {/* Background glow */}
       <motion.div

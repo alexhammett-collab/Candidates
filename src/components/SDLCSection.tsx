@@ -24,7 +24,7 @@ export default function SDLCSection() {
   const pipelineInView = useInView(pipelineRef, { once: true, margin: "-10%" });
 
   return (
-    <section id="sdlc" className="py-32 sm:py-40 px-6" ref={ref}>
+    <section id="sdlc" className="py-20 sm:py-24 px-6" ref={ref}>
       <div className="max-w-[1200px] mx-auto">
         {/* Header */}
         <div className="text-center mb-6">

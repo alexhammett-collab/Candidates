@@ -342,7 +342,7 @@ export default function PlatformOverview() {
   const nodes = buildNodes(t.platform);
 
   return (
-    <section id="platform" className="relative py-32 px-6" ref={ref}>
+    <section id="platform" className="relative py-20 sm:py-24 px-6" ref={ref}>
       <div className="max-w-[1200px] mx-auto">
         <div className="text-center mb-20">
           <motion.span

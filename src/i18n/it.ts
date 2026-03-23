@@ -1,7 +1,7 @@
 import type { Translations } from "./types";
 
 export const it: Translations = {
-  nav: { platform: "Piattaforma", devin: "Devin", team: "Team", viewRoles: "Vedi posizioni" },
+  nav: { platform: "Piattaforma", devin: "La Piattaforma Cognition", team: "Team", viewRoles: "Vedi posizioni" },
   hero: {
     title: "Il team che ridefinisce come si costruisce il software.",
     subtitle: "Costruiamo ingegneri software IA autonomi. Sistemi che ragionano, pianificano ed eseguono su intere codebase. Non copiloti. Ingegneri.",

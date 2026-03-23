@@ -1,7 +1,7 @@
 import type { Translations } from "./types";
 
 export const fr: Translations = {
-  nav: { platform: "Plateforme", devin: "Devin", team: "\u00c9quipe", viewRoles: "Voir les postes" },
+  nav: { platform: "Plateforme", devin: "La Plateforme Cognition", team: "\u00c9quipe", viewRoles: "Voir les postes" },
   hero: {
     title: "L\u2019\u00e9quipe qui red\u00e9finit la cr\u00e9ation logicielle.",
     subtitle: "Nous construisons des ing\u00e9nieurs logiciels IA autonomes. Des syst\u00e8mes qui raisonnent, planifient et ex\u00e9cutent sur des bases de code enti\u00e8res. Pas des copilotes. Des ing\u00e9nieurs.",

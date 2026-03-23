@@ -79,7 +79,7 @@ export default function Traction() {
   }, [y]);
 
   return (
-    <section className="py-32 px-6" ref={ref}>
+    <section className="py-20 sm:py-24 px-6" ref={ref}>
       <div className="max-w-[1200px] mx-auto">
         <div className="text-center mb-16">
           <motion.span

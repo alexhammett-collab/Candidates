@@ -37,7 +37,7 @@ export default function TechnologySection({
   const titleWords = title.split(" ");
 
   return (
-    <section id={id} className="py-24 sm:py-32 px-6" ref={ref}>
+    <section id={id} className="py-16 sm:py-20 px-6" ref={ref}>
       <div
         className={`max-w-[1200px] mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center ${
           reversed ? "md:[direction:rtl]" : ""
