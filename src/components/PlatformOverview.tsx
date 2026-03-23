@@ -49,6 +49,15 @@ const nodes: PlatformNode[] = [
   },
 ];
 
+const devinAngle = 36;
+const miniDevins = [
+  { label: "D1", offsetAngle: -55 },
+  { label: "D2", offsetAngle: -15 },
+  { label: "D3", offsetAngle: 25 },
+  { label: "D4", offsetAngle: 65 },
+  { label: "D5", offsetAngle: 105 },
+];
+
 function OrbitalDiagram({
   inView,
   activeNode,
@@ -58,8 +67,18 @@ function OrbitalDiagram({
   activeNode: string | null;
   setActiveNode: (id: string | null) => void;
 }) {
-  const radius = 180;
-  const size = radius * 2 + 200;
+  const innerRadius = 180;
+  const outerRadius = 310;
+  const miniRadius = 65;
+  const size = outerRadius * 2 + 260;
+  const cx = size / 2;
+  const cy = size / 2;
+
+  const devinRad = (devinAngle * Math.PI) / 180;
+  const devinX = Math.cos(devinRad) * outerRadius;
+  const devinY = Math.sin(devinRad) * outerRadius;
+
+  const isDevinActive = activeNode === "devin-master";
 
   return (
     <motion.div
@@ -76,26 +95,74 @@ function OrbitalDiagram({
           height={size}
           viewBox={`0 0 ${size} ${size}`}
         >
+          {/* Inner orbit ring */}
           <circle
-            cx={radius + 100}
-            cy={radius + 100}
-            r={radius}
+            cx={cx}
+            cy={cy}
+            r={innerRadius}
             fill="none"
             stroke="rgba(99, 102, 241, 0.1)"
             strokeWidth="1"
             strokeDasharray="4 8"
           />
+          {/* Outer orbit ring */}
+          <circle
+            cx={cx}
+            cy={cy}
+            r={outerRadius}
+            fill="none"
+            stroke="rgba(99, 102, 241, 0.06)"
+            strokeWidth="1"
+            strokeDasharray="6 10"
+          />
+          {/* Lines from center to inner nodes */}
           {nodes.map((node) => {
             const rad = (node.angle * Math.PI) / 180;
-            const x = radius + 100 + Math.cos(rad) * radius;
-            const y = radius + 100 + Math.sin(rad) * radius;
+            const x = cx + Math.cos(rad) * innerRadius;
+            const y = cy + Math.sin(rad) * innerRadius;
             return (
               <line
                 key={node.id}
-                x1={radius + 100}
-                y1={radius + 100}
+                x1={cx}
+                y1={cy}
                 x2={x}
                 y2={y}
+                stroke="rgba(99, 102, 241, 0.08)"
+                strokeWidth="1"
+              />
+            );
+          })}
+          {/* Line from center to Devin master */}
+          <line
+            x1={cx}
+            y1={cy}
+            x2={cx + devinX}
+            y2={cy + devinY}
+            stroke="rgba(99, 102, 241, 0.12)"
+            strokeWidth="1.5"
+          />
+          {/* Mini-Devin orbit ring around Devin */}
+          <circle
+            cx={cx + devinX}
+            cy={cy + devinY}
+            r={miniRadius}
+            fill="none"
+            stroke="rgba(99, 102, 241, 0.08)"
+            strokeWidth="1"
+            strokeDasharray="3 6"
+          />
+          {/* Lines from Devin to mini-Devins */}
+          {miniDevins.map((mini) => {
+            const mRad = (mini.offsetAngle * Math.PI) / 180;
+            const mx = cx + devinX + Math.cos(mRad) * miniRadius;
+            const my = cy + devinY + Math.sin(mRad) * miniRadius;
+            return (
+              <line
+                key={mini.label}
+                x1={cx + devinX}
+                y1={cy + devinY}
+                x2={mx}
+                y2={my}
                 stroke="rgba(99, 102, 241, 0.08)"
                 strokeWidth="1"
               />
@@ -117,10 +184,11 @@ function OrbitalDiagram({
         </motion.div>
       </div>
 
+      {/* Inner product nodes */}
       {nodes.map((node, i) => {
         const rad = (node.angle * Math.PI) / 180;
-        const x = Math.cos(rad) * radius;
-        const y = Math.sin(rad) * radius;
+        const x = Math.cos(rad) * innerRadius;
+        const y = Math.sin(rad) * innerRadius;
         const isActive = activeNode === node.id;
 
         return (
@@ -163,6 +231,80 @@ function OrbitalDiagram({
                 </p>
               </motion.div>
             )}
+          </motion.div>
+        );
+      })}
+
+      {/* Devin master node on outer ring */}
+      <motion.div
+        className="absolute z-10"
+        style={{
+          left: `calc(50% + ${devinX}px - 44px)`,
+          top: `calc(50% + ${devinY}px - 44px)`,
+        }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={inView ? { opacity: 1, scale: isDevinActive ? 1.12 : 1 } : {}}
+        transition={{ delay: 0.9, duration: 0.6 }}
+        onMouseEnter={() => setActiveNode("devin-master")}
+        onMouseLeave={() => setActiveNode(null)}
+      >
+        <div
+          className="w-[88px] h-[88px] rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+          style={{
+            background: isDevinActive
+              ? "radial-gradient(circle, rgba(99,102,241,0.25) 0%, rgba(99,102,241,0.08) 70%, transparent 100%)"
+              : "radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.04) 70%, transparent 100%)",
+            border: `1.5px solid ${isDevinActive ? "rgba(99,102,241,0.5)" : "rgba(99,102,241,0.2)"}`,
+            boxShadow: isDevinActive ? "0 0 40px rgba(99,102,241,0.15)" : "none",
+          }}
+        >
+          <span className="text-sm font-bold text-[#6366f1]">Devin</span>
+          <span className="text-[9px] text-[#6366f1]/60 mt-0.5">Master Agent</span>
+        </div>
+
+        {isDevinActive && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-56 glass-panel p-3 text-center z-20"
+          >
+            <p className="text-xs text-[#666] leading-relaxed">
+              A lead Devin orchestrates a fleet of autonomous Devin instances, coordinating parallel workstreams at scale.
+            </p>
+          </motion.div>
+        )}
+      </motion.div>
+
+      {/* Mini-Devin satellite nodes */}
+      {miniDevins.map((mini, i) => {
+        const mRad = (mini.offsetAngle * Math.PI) / 180;
+        const mx = devinX + Math.cos(mRad) * miniRadius;
+        const my = devinY + Math.sin(mRad) * miniRadius;
+
+        return (
+          <motion.div
+            key={mini.label}
+            className="absolute z-10"
+            style={{
+              left: `calc(50% + ${mx}px - 16px)`,
+              top: `calc(50% + ${my}px - 16px)`,
+            }}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: 1.1 + i * 0.08, duration: 0.4, type: "spring", stiffness: 250 }}
+          >
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center cursor-default transition-all duration-300"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(99,102,241,0.03) 100%)",
+                border: "1px solid rgba(99,102,241,0.15)",
+              }}
+            >
+              <span className="text-[8px] font-semibold text-[#6366f1]/70">
+                {mini.label}
+              </span>
+            </div>
           </motion.div>
         );
       })}
